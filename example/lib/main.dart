@@ -1,6 +1,6 @@
 import 'package:flexible_grid_view_example/demo_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flexible_grid_view_plus/flexible_grid_view.dart';
+import 'package:flexible_grid_view_plus/flexible_grid_view_plus.dart';
 
 import 'catalog_card.dart';
 

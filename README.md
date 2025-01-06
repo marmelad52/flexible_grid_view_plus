@@ -1,6 +1,7 @@
 ![](https://img.shields.io/github/stars/egortabula/flexible_grid_view?style=social) ![](https://img.shields.io/github/checks-status/egortabula/flexible_grid_view/main) ![](https://img.shields.io/badge/Support-Android%20%7C%20IOS%20%7C%20Mac%20%7C%20Windows%20%7C%20Linux%20%7C%20Web-brightgreen)
 ![](https://i.ibb.co/jbbncPc/flexible-grid-view-flutter-package-egor-tabula.jpg)
 
+Original package: https://pub.dev/packages/flexible_grid_view
 
 - [About Flexible grid view](#about-flexible-grid-view)
   - [Installation](#installation)

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class TwoColumnRowLayout extends StatelessWidget {
   final List<Widget> children;
   final double crossAxisSpacing;
+  final Widget Function(BuildContext context)? crossAxisSeparatorBuilder;
   final CrossAxisAlignment crossAxisAlignment;
 
   const TwoColumnRowLayout({
     Key? key,
     required this.crossAxisSpacing,
+    this.crossAxisSeparatorBuilder,
     required this.children,
     required this.crossAxisAlignment,
   }) : super(key: key);
@@ -21,7 +23,10 @@ class TwoColumnRowLayout extends StatelessWidget {
           flex: 1,
           child: children[0],
         ),
-        SizedBox(width: crossAxisSpacing),
+        if (crossAxisSeparatorBuilder != null)
+          crossAxisSeparatorBuilder!(context)
+        else
+          SizedBox(width: crossAxisSpacing),
         Flexible(
           flex: 1,
           child: children.length == 1 ? const SizedBox.shrink() : children[1],

@@ -57,9 +57,18 @@ class FlexibleGridView extends StatelessWidget {
   /// The padding to be applied to the scrollable widget.
   final EdgeInsetsGeometry? padding;
 
+  /// `crossAxisAlignment` in row in the grid
   final CrossAxisAlignment crossAxisAlignment;
 
-  final Widget Function(BuildContext, int)? separatorBuilder;
+  /// The separator builder between rows in the grid.
+  ///
+  /// if this function is `not null`, it will be used instead of `mainAxisSpacing`.
+  final Widget Function(BuildContext context)? mainAxisSeparatorBuilder;
+
+  /// The separator builder between columns in the grid.
+  ///
+  /// if this function is `not null`, it will be used instead of `crossAxisSpacing`.
+  final Widget Function(BuildContext context)? crossAxisSeparatorBuilder;
 
   const FlexibleGridView({
     super.key,
@@ -73,7 +82,8 @@ class FlexibleGridView extends StatelessWidget {
     this.controller,
     this.padding,
     this.reverse = false,
-    this.separatorBuilder,
+    this.mainAxisSeparatorBuilder,
+    this.crossAxisSeparatorBuilder,
   });
 
   @override
@@ -98,6 +108,7 @@ class FlexibleGridView extends StatelessWidget {
             return TwoColumnRowLayout(
               crossAxisSpacing: crossAxisSpacing,
               crossAxisAlignment: crossAxisAlignment,
+              crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
               children: rowChildren,
             );
           case GridLayoutEnum.threeElementsInRow:
@@ -115,8 +126,8 @@ class FlexibleGridView extends StatelessWidget {
         }
       },
       separatorBuilder: (context, int index) {
-        if (separatorBuilder != null) {
-          return separatorBuilder!(context, index);
+        if (mainAxisSeparatorBuilder != null) {
+          return mainAxisSeparatorBuilder!(context);
         }
 
         return SizedBox(height: mainAxisSpacing);

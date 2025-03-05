@@ -1,3 +1,7 @@
+## 1.0.2
+
+* added mainAxisSeparatorBuilder and crossAxisSeparatorBuilder
+
 ## 1.0.1
 
 * added custom separatorBuilder

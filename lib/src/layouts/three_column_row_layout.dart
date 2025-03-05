@@ -5,12 +5,14 @@ class ThreeColumnRowLayout extends StatelessWidget {
   final List<Widget> children;
   final double crossAxisSpacing;
   final CrossAxisAlignment crossAxisAlignment;
+  final Widget Function(BuildContext context)? crossAxisSeparatorBuilder;
 
   const ThreeColumnRowLayout({
     Key? key,
     required this.children,
     required this.crossAxisSpacing,
     required this.crossAxisAlignment,
+    this.crossAxisSeparatorBuilder,
   }) : super(key: key);
 
   @override
@@ -22,12 +24,18 @@ class ThreeColumnRowLayout extends StatelessWidget {
           flex: 1,
           child: children[0],
         ),
-        SizedBox(width: crossAxisSpacing),
+        if (crossAxisSeparatorBuilder != null)
+          crossAxisSeparatorBuilder!(context)
+        else
+          SizedBox(width: crossAxisSpacing),
         Flexible(
           flex: 1,
           child: children.length < 2 ? const SizedBox.shrink() : children[1],
         ),
-        SizedBox(width: crossAxisSpacing),
+        if (crossAxisSeparatorBuilder != null)
+          crossAxisSeparatorBuilder!(context)
+        else
+          SizedBox(width: crossAxisSpacing),
         Flexible(
           flex: 1,
           child: children.length < 3 ? const SizedBox.shrink() : children[2],

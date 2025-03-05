@@ -59,6 +59,8 @@ class FlexibleGridView extends StatelessWidget {
 
   final CrossAxisAlignment crossAxisAlignment;
 
+  final Widget Function(BuildContext, int)? separatorBuilder;
+
   const FlexibleGridView({
     super.key,
     required this.children,
@@ -71,6 +73,7 @@ class FlexibleGridView extends StatelessWidget {
     this.controller,
     this.padding,
     this.reverse = false,
+    this.separatorBuilder,
   });
 
   @override
@@ -112,6 +115,10 @@ class FlexibleGridView extends StatelessWidget {
         }
       },
       separatorBuilder: (context, int index) {
+        if (separatorBuilder != null) {
+          return separatorBuilder!(context, index);
+        }
+
         return SizedBox(height: mainAxisSpacing);
       },
     );

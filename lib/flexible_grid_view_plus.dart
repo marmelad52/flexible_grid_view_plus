@@ -115,12 +115,14 @@ class FlexibleGridView extends StatelessWidget {
             return ThreeColumnRowLayout(
               crossAxisAlignment: crossAxisAlignment,
               crossAxisSpacing: crossAxisSpacing,
+              crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
               children: rowChildren,
             );
           case GridLayoutEnum.fourElementsInRow:
             return FourColumnRowLayout(
               crossAxisAlignment: crossAxisAlignment,
               crossAxisSpacing: crossAxisSpacing,
+              crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
               children: rowChildren,
             );
         }

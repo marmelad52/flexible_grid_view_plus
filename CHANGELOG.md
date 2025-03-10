@@ -1,3 +1,7 @@
+## 1.03
+
+* fix crossAxisSeparatorBuilder
+
 ## 1.0.2
 
 * added mainAxisSeparatorBuilder and crossAxisSeparatorBuilder

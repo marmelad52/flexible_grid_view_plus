@@ -8,33 +8,12 @@ import 'package:flexible_grid_view_plus/src/layouts/three_column_row_layout.dart
 import 'package:flexible_grid_view_plus/src/layouts/two_column_row_layout.dart';
 import 'package:flutter/widgets.dart';
 
-/// A flexible grid view widget that allows for dynamic configuration of the
-/// number of columns per row. The grid view is implemented as a [ListView] with
-/// a [Row] containing [Flexible] children for each row. The number of columns
-/// per row is determined by the [GridLayoutEnum] passed as the `axisCount`
-/// parameter. The children widgets can have different heights.
-///
-/// Example usage:
-/// ```
-/// FlexibleGridView(
-///   children: List.generate(
-///     20,
-///     (index) => Container(
-///       color: Colors.blue,
-///       height: 100 + Random().nextInt(100),
-///     ),
-///   ),
-///   axisCount: GridLayoutEnum.threeElementsInRow,
-///   crossAxisSpacing: 8,
-///   mainAxisSpacing: 8,
-/// );
-/// ```
-class FlexibleGridView extends StatelessWidget {
+class FlexibleGridViewPlus<T> extends StatelessWidget {
   /// The number of elements to be displayed in each row.
   final GridLayoutEnum axisCount;
 
   /// The list of children widgets to be displayed.
-  final List<Widget> children;
+  final List<Widget>? children;
 
   /// The spacing between columns in the grid.
   final double crossAxisSpacing;
@@ -57,21 +36,28 @@ class FlexibleGridView extends StatelessWidget {
   /// The padding to be applied to the scrollable widget.
   final EdgeInsetsGeometry? padding;
 
-  /// `crossAxisAlignment` in row in the grid
+  /// crossAxisAlignment in row in the grid
   final CrossAxisAlignment crossAxisAlignment;
 
   /// The separator builder between rows in the grid.
   ///
-  /// if this function is `not null`, it will be used instead of `mainAxisSpacing`.
+  /// if this function is not null, it will be used instead of mainAxisSpacing.
   final Widget Function(BuildContext context)? mainAxisSeparatorBuilder;
 
   /// The separator builder between columns in the grid.
   ///
-  /// if this function is `not null`, it will be used instead of `crossAxisSpacing`.
+  /// if this function is not null, it will be used instead of crossAxisSpacing.
   final Widget Function(BuildContext context)? crossAxisSeparatorBuilder;
 
-  const FlexibleGridView({
-    super.key,
+  /// A list of elements to build using the builder.
+  final List<T>? items;
+
+  /// The builder function that gets the context, the index, and the element itself.
+  final Widget Function(BuildContext context, int index, T item)? itemBuilder;
+
+  /// Constructor for a ready-made list of children.
+  const FlexibleGridViewPlus({
+    Key? key,
     required this.children,
     this.axisCount = GridLayoutEnum.twoElementsInRow,
     this.crossAxisSpacing = 8,
@@ -84,56 +70,124 @@ class FlexibleGridView extends StatelessWidget {
     this.reverse = false,
     this.mainAxisSeparatorBuilder,
     this.crossAxisSeparatorBuilder,
-  });
+  })  : items = null,
+        itemBuilder = null,
+        super(key: key);
+
+  /// A named constructor with a builder pattern that accepts a list of type T elements.
+  const FlexibleGridViewPlus.builder({
+    Key? key,
+    required List<T> this.items,
+    required Widget Function(BuildContext context, int index, T item)
+        this.itemBuilder,
+    this.axisCount = GridLayoutEnum.twoElementsInRow,
+    this.crossAxisSpacing = 8,
+    this.mainAxisSpacing = 8,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.shrinkWrap = false,
+    this.physics,
+    this.controller,
+    this.padding,
+    this.reverse = false,
+    this.mainAxisSeparatorBuilder,
+    this.crossAxisSeparatorBuilder,
+  })  : children = null,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: shrinkWrap,
-      physics: physics,
-      controller: controller,
-      padding: padding,
-      reverse: reverse,
-      itemCount: (children.length / axisCount.value).ceil(),
-      itemBuilder: (context, index) {
-        int startingIndex = index * axisCount.value;
-        int endingIndex = (startingIndex + axisCount.value < children.length)
-            ? startingIndex + axisCount.value
-            : children.length;
+    if (children != null) {
+      return ListView.separated(
+        shrinkWrap: shrinkWrap,
+        physics: physics,
+        controller: controller,
+        padding: padding,
+        reverse: reverse,
+        itemCount: (children!.length / axisCount.value).ceil(),
+        itemBuilder: (context, rowIndex) {
+          final startIndex = rowIndex * axisCount.value;
+          final endIndex = (startIndex + axisCount.value < children!.length)
+              ? startIndex + axisCount.value
+              : children!.length;
+          final rowChildren = children!.sublist(startIndex, endIndex);
 
-        List<Widget> rowChildren = children.sublist(startingIndex, endingIndex);
+          switch (axisCount) {
+            case GridLayoutEnum.twoElementsInRow:
+              return TwoColumnRowLayout(
+                crossAxisSpacing: crossAxisSpacing,
+                crossAxisAlignment: crossAxisAlignment,
+                crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
+                children: rowChildren,
+              );
+            case GridLayoutEnum.threeElementsInRow:
+              return ThreeColumnRowLayout(
+                crossAxisSpacing: crossAxisSpacing,
+                crossAxisAlignment: crossAxisAlignment,
+                crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
+                children: rowChildren,
+              );
+            case GridLayoutEnum.fourElementsInRow:
+              return FourColumnRowLayout(
+                crossAxisSpacing: crossAxisSpacing,
+                crossAxisAlignment: crossAxisAlignment,
+                crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
+                children: rowChildren,
+              );
+          }
+        },
+        separatorBuilder: (context, index) => mainAxisSeparatorBuilder != null
+            ? mainAxisSeparatorBuilder!(context)
+            : SizedBox(height: mainAxisSpacing),
+      );
+    } else {
+      // Implementation for the builder pattern with the transfer of a type T element.
+      final rowCount = (items!.length / axisCount.value).ceil();
+      return ListView.separated(
+        shrinkWrap: shrinkWrap,
+        physics: physics,
+        controller: controller,
+        padding: padding,
+        reverse: reverse,
+        itemCount: rowCount,
+        itemBuilder: (context, rowIndex) {
+          final startIndex = rowIndex * axisCount.value;
+          final endIndex = (startIndex + axisCount.value > items!.length)
+              ? items!.length
+              : startIndex + axisCount.value;
+          final rowChildren = List.generate(
+            endIndex - startIndex,
+            (index) => itemBuilder!(
+                context, startIndex + index, items![startIndex + index]),
+          );
 
-        switch (axisCount) {
-          case GridLayoutEnum.twoElementsInRow:
-            return TwoColumnRowLayout(
-              crossAxisSpacing: crossAxisSpacing,
-              crossAxisAlignment: crossAxisAlignment,
-              crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
-              children: rowChildren,
-            );
-          case GridLayoutEnum.threeElementsInRow:
-            return ThreeColumnRowLayout(
-              crossAxisAlignment: crossAxisAlignment,
-              crossAxisSpacing: crossAxisSpacing,
-              crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
-              children: rowChildren,
-            );
-          case GridLayoutEnum.fourElementsInRow:
-            return FourColumnRowLayout(
-              crossAxisAlignment: crossAxisAlignment,
-              crossAxisSpacing: crossAxisSpacing,
-              crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
-              children: rowChildren,
-            );
-        }
-      },
-      separatorBuilder: (context, int index) {
-        if (mainAxisSeparatorBuilder != null) {
-          return mainAxisSeparatorBuilder!(context);
-        }
-
-        return SizedBox(height: mainAxisSpacing);
-      },
-    );
+          switch (axisCount) {
+            case GridLayoutEnum.twoElementsInRow:
+              return TwoColumnRowLayout(
+                crossAxisSpacing: crossAxisSpacing,
+                crossAxisAlignment: crossAxisAlignment,
+                crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
+                children: rowChildren,
+              );
+            case GridLayoutEnum.threeElementsInRow:
+              return ThreeColumnRowLayout(
+                crossAxisSpacing: crossAxisSpacing,
+                crossAxisAlignment: crossAxisAlignment,
+                crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
+                children: rowChildren,
+              );
+            case GridLayoutEnum.fourElementsInRow:
+              return FourColumnRowLayout(
+                crossAxisSpacing: crossAxisSpacing,
+                crossAxisAlignment: crossAxisAlignment,
+                crossAxisSeparatorBuilder: crossAxisSeparatorBuilder,
+                children: rowChildren,
+              );
+          }
+        },
+        separatorBuilder: (context, index) => mainAxisSeparatorBuilder != null
+            ? mainAxisSeparatorBuilder!(context)
+            : SizedBox(height: mainAxisSpacing),
+      );
+    }
   }
 }

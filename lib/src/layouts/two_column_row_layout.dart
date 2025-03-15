@@ -9,9 +9,9 @@ class TwoColumnRowLayout extends StatelessWidget {
   const TwoColumnRowLayout({
     Key? key,
     required this.crossAxisSpacing,
-    this.crossAxisSeparatorBuilder,
     required this.children,
     required this.crossAxisAlignment,
+    this.crossAxisSeparatorBuilder,
   }) : super(key: key);
 
   @override

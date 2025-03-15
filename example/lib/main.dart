@@ -12,18 +12,14 @@ class RootWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flexible grid view',
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light,
-        colorSchemeSeed: Colors.greenAccent,
-      ),
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Flexible grid view example'),
+          title: const Text('Flexible grid view plus example'),
         ),
-        body: FlexibleGridView(
+        body: FlexibleGridViewPlus(
           padding: const EdgeInsets.all(16),
+          axisCount: GridLayoutEnum.twoElementsInRow,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
           children: demoData.map((e) => CatalogCard(catalogItem: e)).toList(),

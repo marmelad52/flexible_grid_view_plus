@@ -1,37 +1,45 @@
-![](https://img.shields.io/github/stars/egortabula/flexible_grid_view?style=social) ![](https://img.shields.io/github/checks-status/egortabula/flexible_grid_view/main) ![](https://img.shields.io/badge/Support-Android%20%7C%20IOS%20%7C%20Mac%20%7C%20Windows%20%7C%20Linux%20%7C%20Web-brightgreen)
-![](https://i.ibb.co/jbbncPc/flexible-grid-view-flutter-package-egor-tabula.jpg)
 
-Original package: https://pub.dev/packages/flexible_grid_view
+# Flexible Grid View Plus
 
-- [About Flexible grid view](#about-flexible-grid-view)
+A Flutter package that provides a flexible grid view, making it easier to create grid layouts with dynamic child heights. With Flexible Grid View Plus, you don't have to worry about setting the fixed height or aspect ratio for your children widgets.
+
+## Table of Contents
+
+- [About Flexible Grid View Plus](#about-flexible-grid-view-plus)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [Standard Usage](#standard-usage)
+    - [Builder Usage](#builder-usage)
   - [API](#api)
   - [Layouts](#layouts)
   - [Conclusion](#conclusion)
 
-# About Flexible grid view
-I made Flexible Grid View that makes it easier to create grid views in Flutter.
+## About Flexible Grid View Plus
 
-With Flexible Grid View, you don't have to worry about setting the height of your children widgets because they can have any height. This is much more convenient than the default gridView widget, which requires you to set either the aspectRatio or a fixed height for your children widgets.
+Flexible Grid View Plus simplifies grid creation in Flutter by allowing children widgets to have any height. This is much more convenient than using the default GridView widget, which often requires setting a fixed height or aspect ratio.
 
 ## Installation
-Add `flexible_grid_view` as a dependency in your pubspec.yaml file:
+
+Add `flexible_grid_view_plus` as a dependency in your `pubspec.yaml` file:
 
 ```dart
 dependencies:
-  flexible_grid_view: ^0.0.1
+  flexible_grid_view_plus: ^1.0.3
 ```
 
-Then, run `flutter pub get` to install the package.
+Then run `flutter pub get` to install the package.
+
 ## Usage
-To use FlexibleGridView, import flexible_grid_view.dart and use the FlexibleGridView widget as follows:
+
+### Standard Usage
+
+To use FlexibleGridViewPlus with a pre-built list of widgets, import the package and use the widget as follows:
 
 ```dart
-import 'package:flexible_grid_view/flexible_grid_view.dart';
+import 'package:flexible_grid_view_plus/flexible_grid_view_plus.dart';
 import 'dart:math';
 
-FlexibleGridView(
+FlexibleGridViewPlus(
   children: List.generate(
     20,
     (index) => Container(
@@ -44,31 +52,96 @@ FlexibleGridView(
   mainAxisSpacing: 8,
 );
 ```
-Here, we have created a `FlexibleGridView` with 20 randomly sized Container children, displayed in rows with three elements per row, with 8 pixels of spacing between columns and rows.
+
+### Builder Usage
+
+The builder constructor works similarly to `ListView.builder` and lets you provide a list of data items along with a builder function that receives the index and the item itself:
+
+```dart
+FlexibleGridViewPlus.builder(
+  padding: EdgeInsets.fromLTRB(
+    16,
+    16,
+    16,
+    MediaQuery.of(context).viewPadding.bottom,
+  ),
+  axisCount: GridLayoutEnum.twoElementsInRow,
+  mainAxisSpacing: 16,
+  crossAxisSpacing: 16,
+  items: demoData,
+  itemBuilder: (context, index, item) {
+    return CatalogCard(catalogItem: item);
+  },
+),
+```
 
 ## API
 
-The `FlexibleGridView` widget has the following parameters:
+The `FlexibleGridViewPlus` widget supports two usage patterns: a standard version with a list of children and a builder version that accepts a list of items of type `T`.
 
-- `children` (required): The list of children widgets to be displayed.
-- `axisCount`: The number of elements to be displayed in each row, as a GridLayoutEnum value. Defaults to GridLayoutEnum.twoElementsInRow.
-- `crossAxisSpacing`: The spacing between columns in the grid. Defaults to 8.
-- `mainAxisSpacing`: The spacing between rows in the grid. Defaults to 8.
-- `shrinkWrap`: Whether the grid should be allowed to shrink-wrap its contents. Defaults to false.
-- `physics`: The physics of the scrollable widget. Defaults to null.
-- `controller`: The controller for the scrollable widget. Defaults to null.
-- `reverse`: Whether the grid should be displayed in reverse order. Defaults to false.
-- `padding`: The padding to be applied to the scrollable widget. Defaults to null.
+### Common Parameters
+
+- **`axisCount`** (`GridLayoutEnum`):  
+  The number of elements to be displayed in each row. Defaults to `GridLayoutEnum.twoElementsInRow`.
+
+- **`crossAxisSpacing`** (`double`):  
+  The spacing between columns in the grid. Defaults to `8`.
+
+- **`mainAxisSpacing`** (`double`):  
+  The spacing between rows in the grid. Defaults to `8`.
+
+- **`shrinkWrap`** (`bool`):  
+  Whether the grid should be allowed to shrink-wrap its contents. Defaults to `false`.
+
+- **`physics`** (`ScrollPhysics?`):  
+  The physics for the scrollable grid view. Defaults to `null`.
+
+- **`controller`** (`ScrollController?`):  
+  The controller for the scrollable widget. Defaults to `null`.
+
+- **`reverse`** (`bool`):  
+  Whether the grid should be displayed in reverse order. Defaults to `false`.
+
+- **`padding`** (`EdgeInsetsGeometry?`):  
+  The padding to be applied to the scrollable widget. Defaults to `null`.
+
+- **`crossAxisAlignment`** (`CrossAxisAlignment`):  
+  The cross-axis alignment for the children in each row. Defaults to `CrossAxisAlignment.start`.
+
+- **`mainAxisSeparatorBuilder`** (`Widget Function(BuildContext context)?`):  
+  A builder for the separator widget between rows. If provided, it will override the default `mainAxisSpacing`.
+
+- **`crossAxisSeparatorBuilder`** (`Widget Function(BuildContext context)?`):  
+  A builder for the separator widget between columns. If provided, it will override the default `crossAxisSpacing`.
+
+### Standard Constructor Specific
+
+- **`children`** (`List<Widget>`):  
+  A list of widgets to be directly displayed in the grid.
+
+### Builder Constructor Specific
+
+- **`items`** (`List<T>`):  
+  A list of elements of type `T` that will be used to lazily build the grid.
+
+- **`itemBuilder`** (`Widget Function(BuildContext context, int index, T item)`):  
+  A builder function that receives the build context, the index, and the item of type `T` for that position, and returns the corresponding widget.
 
 ## Layouts
-`GridLayoutEnum` is an enum class that represents the number of elements to be displayed in each row of the `FlexibleGridView`. It has the following values:
 
-* `GridLayoutEnum.twoElementsInRow`: Two elements per row.
-* `GridLayoutEnum.threeElementsInRow`: Three elements per row.
-* `GridLayoutEnum.fourElementsInRow`: Four elements per row.
+The package uses the `GridLayoutEnum` enum to determine the number of elements per row. The enum includes:
 
+- **`GridLayoutEnum.twoElementsInRow`**:  
+  Two elements per row.
+
+- **`GridLayoutEnum.threeElementsInRow`**:  
+  Three elements per row.
+
+- **`GridLayoutEnum.fourElementsInRow`**:  
+  Four elements per row.
+
+Internally, different layout widgets (`TwoColumnRowLayout`, `ThreeColumnRowLayout`, and `FourColumnRowLayout`) are used to arrange grid items based on the selected `axisCount`.
 
 ## Conclusion
-Thank you for watching until the end! I hope I was able to explain how this package works. But if you still have any questions, you can write to me on [Telegram](https://t.me/egor_tabula) or [GitHub](https://github.com/egortabula/shopping_cart), and I will try to help as much as possible.
 
-[![Buy me a coffe](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png "Buy me a coffe")](https://www.buymeacoffee.com/egortabula "Buy me a coffe")
+Flexible Grid View Plus was inspired by the [original package](https://pub.dev/packages/flexible_grid_view) and the work of [egortabula.dev](https://pub.dev/publishers/egortabula.dev/packages). This package aims to simplify the creation of dynamic grids in Flutter by eliminating the need to set fixed heights or aspect ratios for grid items and providing both standard and builder-based usage options.

@@ -1,6 +1,6 @@
 name: flexible_grid_view_plus
 description: Flexible grid view is a Flutter package that simplifies the process of creating a grid view. With FlexibleGridView, you don't need to specify the height of your children widgets.
-version: 1.0.3
+version: 1.1.0
 repository: https://github.com/marmelad52/flexible_grid_view_plus
 
 homepage:

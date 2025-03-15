@@ -3,16 +3,21 @@
 
 A Flutter package that provides a flexible grid view, making it easier to create grid layouts with dynamic child heights. With Flexible Grid View Plus, you don't have to worry about setting the fixed height or aspect ratio for your children widgets.
 
+<p align="center">
+  <img src="https://github.com/marmelad52/flexible_grid_view_plus/blob/main/images/example.png?raw=true" alt="Example Flexible Grid View Plus" width="250">
+</p>
+
+
 ## Table of Contents
 
 - [About Flexible Grid View Plus](#about-flexible-grid-view-plus)
-  - [Installation](#installation)
-  - [Usage](#usage)
+- [Installation](#installation)
+- [Usage](#usage)
     - [Standard Usage](#standard-usage)
     - [Builder Usage](#builder-usage)
-  - [API](#api)
-  - [Layouts](#layouts)
-  - [Conclusion](#conclusion)
+- [API](#api)
+- [Layouts](#layouts)
+- [Conclusion](#conclusion)
 
 ## About Flexible Grid View Plus
 
@@ -24,7 +29,7 @@ Add `flexible_grid_view_plus` as a dependency in your `pubspec.yaml` file:
 
 ```dart
 dependencies:
-  flexible_grid_view_plus: ^1.0.3
+  flexible_grid_view_plus: ^1.1.0
 ```
 
 Then run `flutter pub get` to install the package.
@@ -50,6 +55,7 @@ FlexibleGridViewPlus(
   axisCount: GridLayoutEnum.threeElementsInRow,
   crossAxisSpacing: 8,
   mainAxisSpacing: 8,
+  padding: const EdgeInsets.all(16),
 );
 ```
 
@@ -59,12 +65,7 @@ The builder constructor works similarly to `ListView.builder` and lets you provi
 
 ```dart
 FlexibleGridViewPlus.builder(
-  padding: EdgeInsets.fromLTRB(
-    16,
-    16,
-    16,
-    MediaQuery.of(context).viewPadding.bottom,
-  ),
+  padding: const EdgeInsets.all(16),
   axisCount: GridLayoutEnum.twoElementsInRow,
   mainAxisSpacing: 16,
   crossAxisSpacing: 16,

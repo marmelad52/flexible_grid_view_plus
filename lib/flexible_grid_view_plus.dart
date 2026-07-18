@@ -1,4 +1,4 @@
-library flexible_grid_view_plus;
+library;
 
 export 'src/enums/grid_layout_enum.dart';
 
@@ -36,7 +36,9 @@ class FlexibleGridViewPlus<T> extends StatelessWidget {
   /// The padding to be applied to the scrollable widget.
   final EdgeInsetsGeometry? padding;
 
-  /// crossAxisAlignment in row in the grid
+  /// crossAxisAlignment in row in the grid.
+  ///
+  /// Defaults to [CrossAxisAlignment.stretch] so every child in a row shares the height of the tallest one.
   final CrossAxisAlignment crossAxisAlignment;
 
   /// The separator builder between rows in the grid.
@@ -57,12 +59,12 @@ class FlexibleGridViewPlus<T> extends StatelessWidget {
 
   /// Constructor for a ready-made list of children.
   const FlexibleGridViewPlus({
-    Key? key,
+    super.key,
     required this.children,
     this.axisCount = GridLayoutEnum.twoElementsInRow,
     this.crossAxisSpacing = 8,
     this.mainAxisSpacing = 8,
-    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.stretch,
     this.shrinkWrap = false,
     this.physics,
     this.controller,
@@ -70,20 +72,19 @@ class FlexibleGridViewPlus<T> extends StatelessWidget {
     this.reverse = false,
     this.mainAxisSeparatorBuilder,
     this.crossAxisSeparatorBuilder,
-  })  : items = null,
-        itemBuilder = null,
-        super(key: key);
+  }) : items = null,
+       itemBuilder = null;
 
   /// A named constructor with a builder pattern that accepts a list of type T elements.
   const FlexibleGridViewPlus.builder({
-    Key? key,
+    super.key,
     required List<T> this.items,
     required Widget Function(BuildContext context, int index, T item)
-        this.itemBuilder,
+    this.itemBuilder,
     this.axisCount = GridLayoutEnum.twoElementsInRow,
     this.crossAxisSpacing = 8,
     this.mainAxisSpacing = 8,
-    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.stretch,
     this.shrinkWrap = false,
     this.physics,
     this.controller,
@@ -91,8 +92,7 @@ class FlexibleGridViewPlus<T> extends StatelessWidget {
     this.reverse = false,
     this.mainAxisSeparatorBuilder,
     this.crossAxisSeparatorBuilder,
-  })  : children = null,
-        super(key: key);
+  }) : children = null;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +140,6 @@ class FlexibleGridViewPlus<T> extends StatelessWidget {
             : SizedBox(height: mainAxisSpacing),
       );
     } else {
-      // Implementation for the builder pattern with the transfer of a type T element.
       final rowCount = (items!.length / axisCount.value).ceil();
       return ListView.separated(
         shrinkWrap: shrinkWrap,
@@ -157,7 +156,10 @@ class FlexibleGridViewPlus<T> extends StatelessWidget {
           final rowChildren = List.generate(
             endIndex - startIndex,
             (index) => itemBuilder!(
-                context, startIndex + index, items![startIndex + index]),
+              context,
+              startIndex + index,
+              items![startIndex + index],
+            ),
           );
 
           switch (axisCount) {

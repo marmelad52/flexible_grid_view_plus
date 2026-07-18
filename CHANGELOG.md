@@ -1,3 +1,7 @@
+## 1.2.0 - 2026-07-18
+- **Equal row height by default:**  
+  Row children now stretch to match the tallest sibling in the same row (`crossAxisAlignment` defaults to `CrossAxisAlignment.stretch`), independent of other rows.
+
 ## 1.1.0 - 2025-03-15
 - **Builder Constructor:**  
   Introduced a new builder constructor for `FlexibleGridViewPlus` that supports lazy item generation, `FlexibleGridViewPlus.builder`

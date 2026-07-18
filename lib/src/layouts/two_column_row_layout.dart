@@ -7,31 +7,33 @@ class TwoColumnRowLayout extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
 
   const TwoColumnRowLayout({
-    Key? key,
+    super.key,
     required this.crossAxisSpacing,
     required this.children,
     required this.crossAxisAlignment,
     this.crossAxisSeparatorBuilder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: crossAxisAlignment,
-      children: [
-        Flexible(
-          flex: 1,
-          child: children[0],
-        ),
-        if (crossAxisSeparatorBuilder != null)
-          crossAxisSeparatorBuilder!(context)
-        else
-          SizedBox(width: crossAxisSpacing),
-        Flexible(
-          flex: 1,
-          child: children.length == 1 ? const SizedBox.shrink() : children[1],
-        ),
-      ],
+    // IntrinsicHeight makes the row match the tallest child, so crossAxisAlignment.stretch can equalize heights.
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: crossAxisAlignment,
+        children: [
+          Flexible(flex: 1, child: children[0]),
+          if (crossAxisSeparatorBuilder != null)
+            crossAxisSeparatorBuilder!(context)
+          else
+            SizedBox(width: crossAxisSpacing),
+          Flexible(
+            flex: 1,
+            child: children.length == 1
+                ? const SizedBox.shrink()
+                : children[1],
+          ),
+        ],
+      ),
     );
   }
 }

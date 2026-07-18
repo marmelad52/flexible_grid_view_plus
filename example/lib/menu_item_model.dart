@@ -1,7 +1,7 @@
 class MenuItemModel {
    final String name;
   final double price;
-  final String photoUrl;
+  final String imagePath;
 
-  MenuItemModel(this.name, this.price, this.photoUrl);
+  MenuItemModel(this.name, this.price, this.imagePath);
 }

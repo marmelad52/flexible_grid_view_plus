@@ -17,26 +17,25 @@ class CatalogCard extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 16 / 12,
-            child: Image.network(
-              catalogItem.photoUrl,
+            child: Image.asset(
+              catalogItem.imagePath,
               fit: BoxFit.cover,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             catalogItem.name,
+            textAlign: TextAlign.center,
             style: theme.textTheme.titleLarge,
-            maxLines: 1,
           ),
           const SizedBox(height: 16),
+          Spacer(),
           OutlinedButton.icon(
             onPressed: () {},
             label: Text('\$${catalogItem.price}'),
             icon: const Icon(Icons.add_shopping_cart),
           ),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
         ],
       ),
     );
